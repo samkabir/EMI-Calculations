@@ -26,25 +26,7 @@ const PrettoSlider = styled1(Slider)({
           display: 'none',
         },
       },
-      '& .MuiSlider-valueLabel': {
-        lineHeight: 1.2,
-        fontSize: 12,
-        background: 'unset',
-        padding: 0,
-        width: 32,
-        height: 32,
-        borderRadius: '50% 50% 50% 0',
-        backgroundColor: 'orange',
-        transformOrigin: 'bottom left',
-        transform: 'translate(50%, -100%) rotate(-45deg) scale(0)',
-        '&:before': { display: 'none' },
-        '&.MuiSlider-valueLabelOpen': {
-          transform: 'translate(50%, -100%) rotate(-45deg) scale(1)',
-        },
-        '& > *': {
-          transform: 'rotate(45deg)',
-        },
-      },
+      
     });
 
 
@@ -84,6 +66,7 @@ const Slider1 = () => {
                         valueLabelDisplay="auto"
                         aria-label="pretto slider"
                         defaultValue={0}
+                        max="1000000"
                         onChange={handleChange1}
                   />
 
@@ -95,6 +78,7 @@ const Slider1 = () => {
                         valueLabelDisplay="auto"
                         aria-label="pretto slider"
                         defaultValue={0}
+                        max="22"
                         onChange={handleChange2}
                   />
                   <Container>
