@@ -32,52 +32,51 @@ const PrettoSlider = styled1(Slider)({
 
 const Slider1 = () => {
       const [price, setPrice] = React.useState();
-      const [value1, setValue1] = React.useState(10);
-      const [value2, setValue2] = React.useState(10);
-      const [total, setTotal] = React.useState();
-      const [payAmount, setPayAmount] = React.useState();
-      const [extra, setExtra] = React.useState();
-      const [emi1, setEMI] = React.useState(1);
+      const [downPayment, setDownPayment] = React.useState(10);
+      const [interestRate, setInterestRate] = React.useState(10);
+      const [months, setMonths] = React.useState(12);
+
+
+      //This is the original Price of the Car
+      const handlePrice = e => {
+            setPrice(e.target.value);
+      }
+
+
+      //EMI Calculation
+
+      let loanAmount = price-downPayment;
+      let emi = ( (loanAmount * ( (interestRate/100) /months ) * (Math.pow( (( (interestRate/100) /months)+1), months )) ) / ( (Math.pow( (( (interestRate/100) /months)+1), months )) - 1) ).toFixed(0);
+      let payAmount = emi*months;
+      let payExtra = payAmount - loanAmount ;
 
       //Slider Functions
-      function calculateValue1(value1) {
-            return value1;
+      function calculateDownPayment(downPayment) {
+            return downPayment;
       }
+
       const handleChange1 = (event, newValue) => {
             if (typeof newValue === 'number') {
-                  setTotal(newValue);
-                  const totalPayableAmount = loanAmount + (loanAmount * (value2/100));
-                  setPayAmount(totalPayableAmount);
-                  const payExtra = totalPayableAmount - loanAmount;
-                  setExtra(payExtra);
-                  handleYear(1);
-                  setValue1(newValue);
+                  setDownPayment(newValue);
             }
       }
-      function calculateValue2(value2) {
-            return value2;
+      function calculateInterest(interestRate) {
+            return interestRate;
       }
       const handleChange2 = (event, newValue) => {
             if (typeof newValue === 'number') {
-                  const totalPayableAmount = loanAmount + (loanAmount * (value2/100));
-                  setPayAmount(totalPayableAmount);
-                  const payExtra = totalPayableAmount - loanAmount;
-                  setExtra(payExtra);
-                  setValue2(newValue);
-                  handleYear(1);
+                  setInterestRate(newValue);
             }
       }
       //Code
       
-      const handlePrice = e => {
-            setPrice(e.target.value);
-      }
-      const handleYear = (value) => {
-            const emi = payAmount/value*12;
-            setEMI(emi);
+      
+      const handleMonths = (value) => {
+            setMonths(value)
       }
 
-      const loanAmount = price-value1;
+      
+
       return (
             <Box> 
                   <label>Enter Amount </label>
@@ -88,14 +87,15 @@ const Slider1 = () => {
 
                   <div>
                         <Typography id="track-false-slider" gutterBottom>
-                              DownPayment:   {calculateValue1(value1)}
+                              DownPayment:   {calculateDownPayment(downPayment)}
                         </Typography>
                         <PrettoSlider
                               id="downPayment"
-                              value={value1}
+                              value={downPayment}
                               valueLabelDisplay="auto"
                               aria-label="pretto slider"
                               defaultValue={0}
+                              step={1000}
                               max={price}
                               onChange={handleChange1}
                         />
@@ -103,39 +103,41 @@ const Slider1 = () => {
 
                   <div>
                         <Typography id="track-false-slider" gutterBottom>
-                              Bank Interest Rate:  {calculateValue2(value2)}%
+                              Bank Interest Rate:  {calculateInterest(interestRate)}%
                         </Typography>
                         <PrettoSlider
                               id="bankInterestRate"
-                              value={value2}
+                              value={interestRate}
                               valueLabelDisplay="auto"
                               aria-label="pretto slider"
                               defaultValue={0}
-                              max="22"
+                              min={8}
+                              step={0.10}
+                              max={22}
                               onChange={handleChange2}
                         />
                   </div>
                   <div>
                         <Container>
-                              <button onClick={() => handleYear(1)}>
+                              <button onClick={() => handleMonths(12)}>
                                     <span id="yearOne">1</span>
                               </button>
-                              <button onClick={() => handleYear(2)}>
+                              <button onClick={() => handleMonths(24)}>
                                     <span id="yearTwo">2</span>
                               </button>
-                              <button onClick={() => handleYear(3)}>
+                              <button onClick={() => handleMonths(36)}>
                                     <span id="yearThree">3</span>
                               </button>
-                              <button onClick={() => handleYear(4)}>
+                              <button onClick={() => handleMonths(48)}>
                                     <span id="yearFour">4</span>
                               </button>
-                              <button onClick={() => handleYear(5)}>
+                              <button onClick={() => handleMonths(60)}>
                                     <span id="yearFive">5</span>
                               </button>
-                              <button onClick={() => handleYear(6)}>
+                              <button onClick={() => handleMonths(72)}>
                                     <span id="yearSix">6</span>
                               </button>
-                              <button onClick={() => handleYear(7)}>
+                              <button onClick={() => handleMonths(84)}>
                                     <span id="yearSeven">7</span>
                               </button>
                         </Container>
@@ -147,7 +149,7 @@ const Slider1 = () => {
                                     Total Loan Amount
                               </FirstPart>
                               <LastPart>
-                                    $<span id="totalLoanAmount">{loanAmount}</span>
+                                    $ {loanAmount}
                               </LastPart>
                         </Calculation>
                         <Calculation>
@@ -155,7 +157,7 @@ const Slider1 = () => {
                                     Payable Amount
                               </FirstPart>
                               <LastPart>
-                                    $<span id="payableAamount">{payAmount}</span>
+                                    $ {payAmount.toFixed(0)}
                               </LastPart>
                         </Calculation>
                         <Calculation>
@@ -163,7 +165,7 @@ const Slider1 = () => {
                                     You''ll pay extra
                               </FirstPart>
                               <LastPart>
-                                    $<span id="payExtra">{extra}</span>
+                                    $ {payExtra.toFixed(0)}
                               </LastPart>
                         </Calculation>
                   </div>      
@@ -175,7 +177,7 @@ const Slider1 = () => {
                                     <h6>per month</h6>
                               </div>
                               <div style={{padding: '50px'}}>
-                                    $<span id="emiTotal">{emi1}</span>
+                                    $<span id="emiTotal">{emi}</span>
                               </div>
                         </EmiCalulation>
                   </div>
